@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Profit Maximization Graph</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    body { font-family: Arial; margin: 40px; }
+    svg { background: #f9f9f9; border: 1px solid #ccc; }
+    #controls { margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+<h2>Profit Maximization in Microeconomics</h2>
+<p>Price (P) = MR = $40</p>
+<p>Cost Function: TC = 100 + 2Q + 0.5Q²</p>
+
+<div id="graph"></div>
+
+<div id="controls">
+  <label for="qRange">Adjust Quantity (Max Q): </label>
+  <input type="range" id="qRange" min="1" max="100" value="60" />
+  <span id="qValue">60</span>
+</div>
+
+<script>
+  const width = 750, height = 500, margin = { top: 30, right: 30, bottom: 50, left: 60 };
+  const svg = d3.select("#graph").append("svg").attr("width", width).attr("height", height);
+
+  const xScale = d3.scaleLinear().domain([1, 100]).range([margin.left, width - margin.right]);
+  const yScale = d3.scaleLinear().domain([0, 100]).range([height - margin.bottom, margin.top]);
+
+  const xAxis = d3.axisBottom(xScale), yAxis = d3.axisLeft(yScale);
+
+  svg.append("g")
+    .attr("transform", `translate(0, ${height - margin.bottom})`)
+    .call(xAxis)
+    .append("text")
+    .attr("x", width / 2).attr("y", 40).attr("fill", "black").text("Quantity (Q)");
+
+  svg.append("g")
+    .attr("transform", `translate(${margin.left}, 0)`)
+    .call(yAxis)
+    .append("text")
+    .attr("x", -40).attr("y", margin.top).attr("fill", "black").text("Cost per Unit ($)");
+
+  const colors = {
+    mc: "steelblue",
+    ac: "orange",
+    avc: "green",
+    afc: "red",
+    mr: "purple"
+  };
+
+  const lineGen = d3.line().x(d => xScale(d.q)).y(d => yScale(d.val));
+
+  function generateData(maxQ) {
+    const data = [];
+    for (let q = 1; q <= maxQ; q++) {
+      const FC = 100;
+      const VC = 2 * q + 0.5 * q * q;
+      const TC = FC + VC;
+      data.push({
+        q: q,
+        mc: 2 + q,
+        ac: TC / q,
+        avc: VC / q,
+        afc: FC / q
+      });
+    }
+    return data;
+  }
+
+  function updateGraph(maxQ) {
+    const data = generateData(maxQ);
+
+    const curves = [
+      { key: "mc", color: colors.mc, label: "Marginal Cost (MC)" },
+      { key: "ac", color: colors.ac, label: "Average Cost (AC)" },
+      { key: "avc", color: colors.avc, label: "Average Variable Cost (AVC)" },
+      { key: "afc", color: colors.afc, label: "Average Fixed Cost (AFC)" }
+    ];
+
+    const lines = svg.selectAll(".cost-line").data(curves);
+
+    lines.enter()
+      .append("path")
+      .attr("class", "cost-line")
+      .merge(lines)
+      .attr("d", d => lineGen(data.map(pt => ({ q: pt.q, val: pt[d.key] }))))
+      .attr("stroke", d => d.color)
+      .attr("fill", "none")
+      .attr("stroke-width", 2);
+
+    // MR Line
+    const mrLine = svg.selectAll(".mr-line").data([1]);
+
+    mrLine.enter()
+      .append("line")
+      .attr("class", "mr-line")
+      .merge(mrLine)
+      .attr("x1", xScale(1))
+      .attr("x2", xScale(maxQ))
+      .attr("y1", yScale(40))
+      .attr("y2", yScale(40))
+      .attr("stroke", colors.mr)
+      .attr("stroke-width", 2)
+      .attr("stroke-dasharray", "5,5");
+
+    // Find profit-maximizing Q where MR = MC
+    const profitMaxQ = data.find(d => d.mc >= 40)?.q;
+
+    const marker = svg.selectAll(".profit-marker").data([profitMaxQ]);
+
+    marker.enter()
+      .append("line")
+      .attr("class", "profit-marker")
+      .merge(marker)
+      .attr("x1", d => xScale(d))
+      .attr("x2", d => xScale(d))
+      .attr("y1", yScale(0))
+      .attr("y2", yScale(100))
+      .attr("stroke", "black")
+      .attr("stroke-dasharray", "4,2");
+
+    // Legend
+    const legendData = [...curves, { key: "mr", color: colors.mr, label: "Marginal Revenue (MR)" }];
+    const legend = svg.selectAll(".legend").data(legendData);
+
+    legend.enter()
+      .append("text")
+      .attr("class", "legend")
+      .merge(legend)
+      .attr("x", width - 200)
+      .attr("y", (d, i) => margin.top + i * 20)
+      .attr("fill", d => d.color)
+      .text(d => d.label);
+  }
+
+  // Initial draw
+  updateGraph(60);
+
+  // Slider interaction
+  d3.select("#qRange").on("input", function () {
+    const qVal = +this.value;
+    d3.select("#qValue").text(qVal);
+    updateGraph(qVal);
+  });
+</script>
+
+</body>
+</html>

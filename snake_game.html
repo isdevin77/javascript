@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>3D Snake Game</title>
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="renderCanvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById("renderCanvas");
+        const engine = new BABYLON.Engine(canvas, true);
+
+        const createScene = () => {
+            const scene = new BABYLON.Scene(engine);
+
+            // Green material for snake
+            const greenMat = new BABYLON.StandardMaterial("greenMat", scene);
+            greenMat.diffuseColor = new BABYLON.Color3(0, 1, 0);
+
+
+            // Camera
+            const camera = new BABYLON.ArcRotateCamera("camera1", -Math.PI / 2, Math.PI / 3, 30, new BABYLON.Vector3(0, 0, 0), scene);
+            camera.attachControl(canvas, true);
+
+            // Light
+            const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
+
+            // Ground
+            const ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 20, height: 20 }, scene);
+
+            // Snake
+            const snake = [];
+            const initial = BABYLON.MeshBuilder.CreateBox("head", { size: 1 }, scene);
+            initial.position.y = 0.5;
+            snake.push(initial);
+
+            let direction = new BABYLON.Vector3(1, 0, 0);
+            let nextDirection = direction.clone();
+
+            let food = null;
+
+            function spawnFood() {
+                if (food) food.dispose();
+                food = BABYLON.MeshBuilder.CreateSphere("food", { diameter: 1 }, scene);
+                const redMat = new BABYLON.StandardMaterial("redMat", scene);
+                redMat.diffuseColor = new BABYLON.Color3(1, 0, 0);
+                food.material = redMat;
+
+                food.position = new BABYLON.Vector3(
+                    Math.floor(Math.random() * 18 - 9),
+                    0.5,
+                    Math.floor(Math.random() * 18 - 9)
+                );
+            }
+
+            spawnFood();
+
+            // Keyboard input — INVERTED so ArrowDown goes DOWN visually
+            window.addEventListener("keydown", e => {
+                if (e.key === "ArrowUp" && direction.z !== -1) nextDirection = new BABYLON.Vector3(0, 0, 1);   // visually up
+                if (e.key === "ArrowDown" && direction.z !== 1) nextDirection = new BABYLON.Vector3(0, 0, -1); // visually down
+                if (e.key === "ArrowLeft" && direction.x !== 1) nextDirection = new BABYLON.Vector3(-1, 0, 0); // left
+                if (e.key === "ArrowRight" && direction.x !== -1) nextDirection = new BABYLON.Vector3(1, 0, 0); // right
+            });
+
+
+            // Game Loop
+            let tick = 0;
+            scene.onBeforeRenderObservable.add(() => {
+                const delta = engine.getDeltaTime();
+                tick += delta;
+                if (tick < 200) return;
+                tick = 0;
+
+                direction = nextDirection.clone();
+                const newHead = BABYLON.MeshBuilder.CreateBox("segment", { size: 1 }, scene);
+                newHead.position = snake[0].position.add(direction);
+                newHead.position.y = 0.5;
+                snake.unshift(newHead);
+
+                if (BABYLON.Vector3.Distance(newHead.position, food.position) < 1) {
+                    spawnFood(); // Grow
+                } else {
+                    const tail = snake.pop();
+                    tail.dispose(); // Keep length
+                }
+
+                // Check bounds
+                if (Math.abs(newHead.position.x) > 10 || Math.abs(newHead.position.z) > 10) {
+                    alert("Game Over: You hit the wall!");
+                    location.reload();
+                }
+
+                // Check self collision
+                for (let i = 1; i < snake.length; i++) {
+                    if (snake[i].position.equalsWithEpsilon(newHead.position, 0.01)) {
+                        clearInterval(gameInterval);
+                        document.getElementById("game-over").style.display = "flex";
+
+                        location.reload();
+                    }
+                }
+            });
+
+            return scene;
+        };
+
+        const scene = createScene();
+        engine.runRenderLoop(() => scene.render());
+        window.addEventListener("resize", () => engine.resize());
+    </script>
+</body>
+
+</html>

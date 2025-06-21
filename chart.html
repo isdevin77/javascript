@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Bar Chart with D3.js</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    svg {
+      font-family: sans-serif;
+      background: #f4f4f4;
+      margin-top: 20px;
+    }
+    .bar {
+      fill: steelblue;
+    }
+    .bar:hover {
+      fill: orange;
+    }
+  </style>
+</head>
+<body>
+  <h2>Simple Bar Chart</h2>
+  <svg width="600" height="400"></svg>
+
+  <script>
+    const data = [25, 30, 45, 60, 20, 65, 75];
+    const svg = d3.select("svg");
+    const width = +svg.attr("width");
+    const height = +svg.attr("height");
+    const barWidth = width / data.length;
+
+    const yScale = d3.scaleLinear()
+      .domain([0, d3.max(data)])
+      .range([height, 0]);
+
+    svg.selectAll("rect")
+      .data(data)
+      .enter()
+      .append("rect")
+      .attr("class", "bar")
+      .attr("x", (d, i) => i * barWidth)
+      .attr("y", d => yScale(d))
+      .attr("width", barWidth - 10)
+      .attr("height", d => height - yScale(d));
+  </script>
+</body>
+</html>
