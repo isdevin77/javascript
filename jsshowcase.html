@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Elements Showcase</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .element-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        .element-card {
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 4px;
+            min-width: 200px;
+        }
+        button {
+            padding: 8px 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #dynamicContent {
+            padding: 15px;
+            border: 1px dashed #3498db;
+            margin-top: 15px;
+            min-height: 50px;
+        }
+        .hidden {
+            display: none;
+        }
+        .tab-buttons {
+            display: flex;
+            margin-bottom: -1px;
+        }
+        .tab-button {
+            padding: 10px 20px;
+            background: #eee;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+        }
+        .tab-button.active {
+            background: white;
+            border-bottom: 1px solid white;
+        }
+        .tab-content {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 0 5px 5px 5px;
+        }
+        .tab-pane {
+            display: none;
+        }
+        .tab-pane.active {
+            display: block;
+        }
+        #colorPickerContainer {
+            width: 200px;
+            height: 200px;
+            margin-top: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        #progressBar {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        #progressBarFill {
+            height: 20px;
+            background-color: #4CAF50;
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <h1>HTML Elements Showcase</h1>
+    <p>This page demonstrates various HTML elements with interactive JavaScript functionality.</p>
+
+    <section id="basic-elements">
+        <h2>Basic Elements</h2>
+        
+        <div class="element-group">
+            <div class="element-card">
+                <h3>Headings</h3>
+                <h1>Heading 1</h1>
+                <h2>Heading 2</h2>
+                <h3>Heading 3</h3>
+                <h4>Heading 4</h4>
+                <h5>Heading 5</h5>
+                <h6>Heading 6</h6>
+            </div>
+            
+            <div class="element-card">
+                <h3>Text Elements</h3>
+                <p>This is a paragraph.</p>
+                <p><strong>Strong text</strong>, <em>emphasized text</em>, <u>underlined text</u>, and <a href="#">a link</a>.</p>
+                <p><small>Small text</small>, <mark>highlighted text</mark>, <del>deleted text</del>, and <ins>inserted text</ins>.</p>
+                <p>Subscript: H<sub>2</sub>O, Superscript: x<sup>2</sup></p>
+            </div>
+            
+            <div class="element-card">
+                <h3>Lists</h3>
+                <h4>Unordered List</h4>
+                <ul>
+                    <li>Item 1</li>
+                    <li>Item 2</li>
+                    <li>Item 3</li>
+                </ul>
+                
+                <h4>Ordered List</h4>
+                <ol>
+                    <li>First item</li>
+                    <li>Second item</li>
+                    <li>Third item</li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <section id="interactive-elements">
+        <h2>Interactive Elements</h2>
+        
+        <div class="element-group">
+            <div class="element-card">
+                <h3>Buttons</h3>
+                <button id="clickMe">Click Me</button>
+                <button id="toggleContent">Toggle Content</button>
+                <button id="alertButton">Show Alert</button>
+                <div id="dynamicContent">Content will appear here</div>
+            </div>
+            
+            <div class="element-card">
+                <h3>Forms</h3>
+                <form id="sampleForm">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your name"><br><br>
+                    
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email"><br><br>
+                    
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" placeholder="Enter password"><br><br>
+                    
+                    <label for="bio">Bio:</label><br>
+                    <textarea id="bio" name="bio" rows="3" cols="30" placeholder="Tell us about yourself"></textarea><br><br>
+                    
+                    <label for="gender">Gender:</label>
+                    <select id="gender" name="gender">
+                        <option value="">Select</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select><br><br>
+                    
+                    <fieldset>
+                        <legend>Interests</legend>
+                        <input type="checkbox" id="coding" name="interests" value="coding">
+                        <label for="coding">Coding</label><br>
+                        <input type="checkbox" id="music" name="interests" value="music">
+                        <label for="music">Music</label><br>
+                        <input type="checkbox" id="sports" name="interests" value="sports">
+                        <label for="sports">Sports</label>
+                    </fieldset><br>
+                    
+                    <fieldset>
+                        <legend>Preferred Language</legend>
+                        <input type="radio" id="html" name="language" value="html">
+                        <label for="html">HTML</label><br>
+                        <input type="radio" id="css" name="language" value="css">
+                        <label for="css">CSS</label><br>
+                        <input type="radio" id="javascript" name="language" value="javascript">
+                        <label for="javascript">JavaScript</label>
+                    </fieldset><br>
+                    
+                    <button type="submit">Submit</button>
+                    <button type="reset">Reset</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <section id="advanced-elements">
+        <h2>Advanced Elements</h2>
+        
+        <div class="element-group">
+            <div class="element-card">
+                <h3>Tabs</h3>
+                <div class="tabs">
+                    <div class="tab-buttons">
+                        <div class="tab-button active" data-tab="tab1">Tab 1</div>
+                        <div class="tab-button" data-tab="tab2">Tab 2</div>
+                        <div class="tab-button" data-tab="tab3">Tab 3</div>
+                    </div>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tab1">
+                            <p>This is the content for Tab 1.</p>
+                        </div>
+                        <div class="tab-pane" id="tab2">
+                            <p>This is the content for Tab 2.</p>
+                        </div>
+                        <div class="tab-pane" id="tab3">
+                            <p>This is the content for Tab 3.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="element-card">
+                <h3>Color Picker</h3>
+                <input type="color" id="colorPicker" value="#3498db">
+                <div id="colorPickerContainer"></div>
+            </div>
+            
+            <div class="element-card">
+                <h3>Progress Bar</h3>
+                <button id="progressButton">Increase Progress</button>
+                <div id="progressBar">
+                    <div id="progressBarFill"></div>
+                </div>
+                <p>Progress: <span id="progressText">0%</span></p>
+            </div>
+        </div>
+    </section>
+
+    <section id="media-elements">
+        <h2>Media Elements</h2>
+        
+        <div class="element-group">
+            <div class="element-card">
+                <h3>Image</h3>
+                <img src="https://via.placeholder.com/300x150" alt="Placeholder Image" id="changeableImage">
+                <button id="changeImage">Change Image</button>
+            </div>
+            
+            <div class="element-card">
+                <h3>Video</h3>
+                <video width="300" controls>
+                    <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            
+            <div class="element-card">
+                <h3>Audio</h3>
+                <audio controls>
+                    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Basic button interactions
+        document.getElementById('clickMe').addEventListener('click', function() {
+            document.getElementById('dynamicContent').textContent = 'Button was clicked!';
+        });
+        
+        document.getElementById('toggleContent').addEventListener('click', function() {
+            const content = document.getElementById('dynamicContent');
+            content.classList.toggle('hidden');
+        });
+        
+        document.getElementById('alertButton').addEventListener('click', function() {
+            alert('This is a JavaScript alert!');
+        });
+        
+        // Form handling
+        document.getElementById('sampleForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Form submitted! (This would normally send data to a server)');
+        });
+        
+        // Tab functionality
+        const tabButtons = document.querySelectorAll('.tab-button');
+        tabButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons and panes
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+                
+                // Add active class to clicked button and corresponding pane
+                this.classList.add('active');
+                const tabId = this.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // Color picker
+        const colorPicker = document.getElementById('colorPicker');
+        const colorContainer = document.getElementById('colorPickerContainer');
+        
+        colorPicker.addEventListener('input', function() {
+            colorContainer.style.backgroundColor = this.value;
+        });
+        
+        // Initialize color container
+        colorContainer.style.backgroundColor = colorPicker.value;
+        
+        // Progress bar
+        let progress = 0;
+        const progressBar = document.getElementById('progressBarFill');
+        const progressText = document.getElementById('progressText');
+        
+        document.getElementById('progressButton').addEventListener('click', function() {
+            progress += 10;
+            if (progress > 100) progress = 0;
+            progressBar.style.width = progress + '%';
+            progressText.textContent = progress + '%';
+        });
+        
+        // Image changer
+        const images = [
+            'https://via.placeholder.com/300x150/3498db/ffffff',
+            'https://via.placeholder.com/300x150/e74c3c/ffffff',
+            'https://via.placeholder.com/300x150/2ecc71/ffffff'
+        ];
+        let currentImage = 0;
+        
+        document.getElementById('changeImage').addEventListener('click', function() {
+            currentImage = (currentImage + 1) % images.length;
+            document.getElementById('changeableImage').src = images[currentImage];
+        });
+    </script>
+</body>
+</html>
